@@ -1,11 +1,9 @@
 from app import app
 import sys
 
-from users.views import users
-from tasks.views import tasks
+from scorer.views import scorer
 
-app.register_blueprint(users, url_prefix='/users')
-app.register_blueprint(tasks, url_prefix='/tasks')
+app.register_blueprint(scorer, url_prefix='/scorer')
 
 # Sets the port, or defaults to 80
 if (len(sys.argv) > 1):
