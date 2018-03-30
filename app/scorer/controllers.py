@@ -25,11 +25,26 @@ def default():
     return 'Hello Scorers!'
 
 def get_frequency_distribution():
-    rcd_cursor = role_corpus.db['role_list_corpus_frequency_distribution_2018_03_27__013821_'].find({});
+    rcd_cursor = role_corpus.db[configurations.freq_dist_collection].find({});
     frequency_distribution = {}
     for i in rcd_cursor:
         frequency_distribution[i['word']] = i['roles']
     return {
         "status": "OK",
         "frequency_distribution": frequency_distribution
+    }
+
+def get_member_distribution():
+    rcd_cursor = role_corpus.db[configurations.membership_collection].find({});
+    member_distribution = {}
+    for i in rcd_cursor:
+        member_distribution[i['role']] = i['data']
+    return {
+        "status": "OK",
+        "member_distribution": member_distribution
+    }
+
+def get_stop_words():
+    return {
+        "status": "OK",
     }

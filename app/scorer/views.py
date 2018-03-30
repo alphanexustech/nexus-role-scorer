@@ -22,3 +22,7 @@ def default():
 @scorer.route('/freqdist/', methods=['GET'])
 def get_frequency_distribution():
     return jsonify(controllers.get_frequency_distribution())
+
+@scorer.route('/memberdist/', methods=['GET'])
+def get_member_distribution():
+    return jsonify(controllers.get_member_distribution())
