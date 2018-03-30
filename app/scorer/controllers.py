@@ -34,11 +34,15 @@ def get_frequency_distribution():
         "frequency_distribution": frequency_distribution
     }
 
-def get_sorted_frequency_distribution():
+def get_bucketed_frequency_distribution():
     rcd_cursor = role_corpus.db[configurations.freq_dist_collection].find({});
     frequency_distribution = {}
     for i in rcd_cursor:
-        frequency_distribution[i['word']] = len(i['roles'])
+        if len(i['roles']) not in frequency_distribution:
+            frequency_distribution[len(i['roles'])] = [i['word']]
+        else:
+            frequency_distribution[len(i['roles'])].append(i['word'])
+
     return {
         "status": "OK",
         "frequency_distribution": frequency_distribution
