@@ -58,7 +58,22 @@ def get_member_distribution():
         "member_distribution": member_distribution
     }
 
+def get_bucketed_member_distribution():
+    rcd_cursor = role_corpus.db[configurations.membership_collection].find({});
+    member_distribution = {}
+    for i in rcd_cursor:
+        if len(i['data']) not in member_distribution:
+            member_distribution[len(i['data'])] = [i['role']]
+        else:
+            member_distribution[len(i['data'])].append(i['role'])
+
+    return {
+        "status": "OK",
+        "member_distribution": member_distribution
+    }
+
 def get_stop_words():
     return {
         "status": "OK",
+        "data": "Not Implemented"
     }

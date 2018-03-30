@@ -30,3 +30,7 @@ def get_bucketed_frequency_distribution():
 @scorer.route('/memberdist/', methods=['GET'])
 def get_member_distribution():
     return jsonify(controllers.get_member_distribution())
+
+@scorer.route('/memberdist/bucketed/', methods=['GET'])
+def get_bucketed_member_distribution():
+    return jsonify(controllers.get_bucketed_member_distribution())
