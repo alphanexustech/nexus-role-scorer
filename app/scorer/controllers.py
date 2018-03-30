@@ -34,6 +34,16 @@ def get_frequency_distribution():
         "frequency_distribution": frequency_distribution
     }
 
+def get_sorted_frequency_distribution():
+    rcd_cursor = role_corpus.db[configurations.freq_dist_collection].find({});
+    frequency_distribution = {}
+    for i in rcd_cursor:
+        frequency_distribution[i['word']] = len(i['roles'])
+    return {
+        "status": "OK",
+        "frequency_distribution": frequency_distribution
+    }
+
 def get_member_distribution():
     rcd_cursor = role_corpus.db[configurations.membership_collection].find({});
     member_distribution = {}
