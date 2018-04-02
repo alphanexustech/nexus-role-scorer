@@ -1,5 +1,5 @@
-# Flask Backend Boilerplate
-Boilerplate Flask Application
+# Role Scorer
+Finds roles in text.
 
 # Install
 Make sure `pipenv` is installed: `pip install pipenv`
