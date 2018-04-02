@@ -73,7 +73,19 @@ def get_bucketed_member_distribution():
     }
 
 def get_stop_words():
+
+    data = get_bucketed_frequency_distribution()
+    buckets = data['frequency_distribution']
+    stopwords = []
+    # Add words that show up in over half of the roles.
+    for bucket in buckets:
+        if bucket > 444:
+            print (bucket, '---', len(buckets[bucket]))
+            stopwords += buckets[bucket]
+    # Add words that show up in just once.
+    stopwords += buckets[1]
     return {
         "status": "OK",
-        "data": "Not Implemented"
+        "role_stop_words": stopwords,
+        "length_role_stop_words": len(stopwords)
     }
