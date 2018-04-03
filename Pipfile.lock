@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "2c7277e29b7e4747579903038f80c8b1f6341fe102a46f56adc29adfc119978c"
+            "sha256": "d70ebd711715a0e7740724bdd04bc69a7d119321ed206eee088d248f919b29d7"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -29,10 +29,10 @@
     "default": {
         "certifi": {
             "hashes": [
-                "sha256:244be0d93b71e93fc0a0a479862051414d0e00e16435707e5bf5000f92e04694",
-                "sha256:5ec74291ca1136b40f0379e1128ff80e866597e4e2c1e755739a913bbc3613c0"
+                "sha256:14131608ad2fd56836d33a71ee60fa1c82bc9d2c8d98b7bdbc631fe1b3cd1296",
+                "sha256:edbc3f203427eef571f79a7692bb160a2b0f7ccaa31953e99bd17e307cf63f7d"
             ],
-            "version": "==2017.11.5"
+            "version": "==2018.1.18"
         },
         "chardet": {
             "hashes": [
@@ -97,6 +97,13 @@
             ],
             "version": "==1.0"
         },
+        "nltk": {
+            "hashes": [
+                "sha256:2661f9971d983db314bbebd51ba770811a362c6597fd0f303bb1d3beadcb4834",
+                "sha256:8a3bad9ff7f67d2828a7915c2fab93e6ca910c2015ef40799e1805fccf2354e5"
+            ],
+            "version": "==3.2.5"
+        },
         "py2neo": {
             "hashes": [
                 "sha256:8177a9b2c4d23a3ce26f02d3d6be92ac49cb7520e88ec1b41d8c6e86774938b8"
@@ -105,10 +112,10 @@
         },
         "pyjwt": {
             "hashes": [
-                "sha256:a4e5f1441e3ca7b382fd0c0b416777ced1f97c64ef0c33bfa39daf38505cfd2f",
-                "sha256:500be75b17a63f70072416843dc80c8821109030be824f4d14758f114978bae7"
+                "sha256:bca523ef95586d3a8a5be2da766fe6f82754acba27689c984e28e77a12174593",
+                "sha256:dacba5786fe3bf1a0ae8673874e29f9ac497860955c501289c63b15d3daae63a"
             ],
-            "version": "==1.5.3"
+            "version": "==1.6.1"
         },
         "pymongo": {
             "hashes": [

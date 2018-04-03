@@ -28,8 +28,8 @@ def get_bucketed_frequency_distribution():
     return jsonify(controllers.get_bucketed_frequency_distribution())
 
 @scorer.route('/freqdist/stopwords/', methods=['GET'])
-def get_stop_words():
-    return jsonify(controllers.get_stop_words())
+def get_role_stop_words():
+    return jsonify(controllers.get_role_stop_words())
 
 @scorer.route('/memberdist/', methods=['GET'])
 def get_member_distribution():
@@ -38,3 +38,10 @@ def get_member_distribution():
 @scorer.route('/memberdist/bucketed/', methods=['GET'])
 def get_bucketed_member_distribution():
     return jsonify(controllers.get_bucketed_member_distribution())
+
+@scorer.route('/<role_set>/', methods=['POST'])
+def score_text(role_set=None):
+    r = request.get_json()
+    doc = r.get('doc')
+    print (role_set)
+    return jsonify(controllers.score_text(role_set=role_set, doc=doc))
