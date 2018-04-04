@@ -236,7 +236,7 @@ def analyze_text(role_set=None, doc=None):
             result = process_text(doc)
             return {
                 "status": "OK",
-                "data": result[0:10],
+                "data": result,
                 "roles_found": len(result)
             }
         else:
