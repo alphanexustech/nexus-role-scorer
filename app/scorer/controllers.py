@@ -119,6 +119,8 @@ def format_name(name):
     # Handle the other names, but return back a title case format in most cases
     if (name == 'yang di-pertuan agong'):
         return 'Yang di-Pertuan Agong'
+    if (name == 'son of heaven'):
+        return 'Song of Heaven'
     else:
         return name.title()
 
@@ -146,12 +148,6 @@ def format_data(process_type, list_of_words, lang, freqdist, memberdist):
                     r_roles_found[role] = [w]
                 else:
                     r_roles_found[role] += [w]
-
-    # for role in r_roles_found:
-    #     words_found = r_roles_found[role]
-    #     r = {}
-    #     r['words_found'] = words_found
-    #     result[role] = r
 
     return r_roles_found
 
@@ -240,7 +236,7 @@ def analyze_text(role_set=None, doc=None):
             result = process_text(doc)
             return {
                 "status": "OK",
-                "data": result,
+                "data": result[0:10],
                 "roles_found": len(result)
             }
         else:
