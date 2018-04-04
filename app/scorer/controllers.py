@@ -212,7 +212,7 @@ def process_text(doc=None):
     # 2) Combine all the results form re-formatting - into a final_result
     final_result = []
     for role in reformatted_result:
-        words_found = list(set(reformatted_result[role]['all_words']))
+        words_found = (reformatted_result[role]['all_words']['words'])
         role_length = len(memberdist[role])
         r = {}
         r['name'] = role
