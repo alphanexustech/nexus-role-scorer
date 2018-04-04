@@ -40,8 +40,7 @@ def get_bucketed_member_distribution():
     return jsonify(controllers.get_bucketed_member_distribution())
 
 @scorer.route('/<role_set>/', methods=['POST'])
-def score_text(role_set=None):
+def analyze_text(role_set=None):
     r = request.get_json()
     doc = r.get('doc')
-    print (role_set)
-    return jsonify(controllers.score_text(role_set=role_set, doc=doc))
+    return jsonify(controllers.analyze_text(role_set=role_set, doc=doc))

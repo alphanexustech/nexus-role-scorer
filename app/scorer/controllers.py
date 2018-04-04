@@ -94,26 +94,85 @@ def get_bucketed_member_distribution():
         "member_distribution": member_distribution
     }
 
-def score_text(role_set=None, doc=None):
-    result = get_role_stop_words()
-    role_stop_words = result['role_stop_words']
-    result = get_frequency_distribution()
-    freqdist = result['frequency_distribution']
+'''
+word_count - the total number of words found in the document signaling the role
+role_length - the total possible number of roles
+'''
+def calculate_normalized_role_score(word_count, role_length):
+    return word_count/role_length * 100
+
+def calculate_role_density_score(r_role_score, length_words_no_stop):
+    r_role_density_score = r_role_score/length_words_no_stop * 100
+    return r_role_density_score
+
+'''
+word_count - the total number of words found in the document signaling the role
+role_length - the total possible number of roles
+'''
+def calculate_role_scores(word_count, role_length, length_words_no_stop):
+    scores = {}
+    scores['normalized_role_score'] = calculate_normalized_role_score(word_count, role_length)
+    scores['role_density_score'] = calculate_role_density_score(scores['normalized_role_score'], length_words_no_stop)
+    return scores
+
+def format_name(name):
+    # Handle the other names, but return back a title case format in most cases
+    if (name == 'yang di-pertuan agong'):
+        return 'Yang di-Pertuan Agong'
+    else:
+        return name.title()
+
+def process_text(doc=None):
+    rsw_result = get_role_stop_words()
+    fd_result = get_frequency_distribution()
+    md_result = get_member_distribution()
+    tokenized_words = wordpunct_tokenize(doc)
+
+    lang = 'english'
+    # Stop Words
+    stop_words = stopwords.words(lang)
+    role_stop_words = rsw_result['role_stop_words']
+    all_stop_words = stop_words + role_stop_words
+    freqdist = fd_result['frequency_distribution']
+    memberdist = md_result['member_distribution']
+
+    list_of_words = [i.lower() for i in tokenized_words if i.lower() not in all_stop_words]
+
+    r_roles_found = {}
+    for word in list_of_words:
+        # IDEA: Find stem and lemma words
+        if word in freqdist:
+            found_roles = list(set(freqdist[word]))
+            for role in found_roles:
+                if role not in r_roles_found:
+                    r_roles_found[role] = [word]
+                else:
+                    r_roles_found[role] += [word]
+
+    result = []
+    for role in r_roles_found:
+        words_found = r_roles_found[role]
+        role_length = len(memberdist[role])
+        r = {}
+        r['name'] = role
+        r['pretty_name'] = format_name(role)
+        r['words_found'] = words_found
+        r['word_count'] = len(words_found)
+        r['role_length'] = role_length
+        r['document_length'] = len(tokenized_words)
+        # IDEA: Find POS for each word here, too.
+        r['scores'] = calculate_role_scores(len(words_found), role_length, len(tokenized_words))
+        result.append(r)
+    sorted_result = sorted(result, key=lambda x: x['scores']['role_density_score'], reverse=True)
+    return sorted_result
+
+def analyze_text(role_set=None, doc=None):
     if role_set == 'all_roles':
         if doc:
-
-            lang = 'english'
-            # Stop Words
-            stop_words = stopwords.words(lang)
-            list_of_words = [i.lower() for i in wordpunct_tokenize(doc) if i.lower() not in stop_words]
-
-            for word in list_of_words:
-                if word in freqdist:
-                    print(freqdist[word])
-                    print(word)
-
+            result = process_text(doc)
             return {
                 "status": "OK",
+                "data": result
             }
         else:
             return {
