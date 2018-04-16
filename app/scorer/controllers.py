@@ -235,9 +235,11 @@ def analyze_text(role_set=None, doc=None):
         if doc:
             result = process_text(doc)
             return {
+                "doc": doc,
                 "status": "OK",
-                "data": result,
-                "roles_found": len(result)
+                "role_set": result,
+                "roles_found": len(result),
+                "date": [datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]]
             }
         else:
             return {
