@@ -25,10 +25,22 @@ from bson import json_util
 # Date
 from datetime import datetime
 
+# Application context
+from app import app
 
 def default():
     return 'Hello Scorers!'
 
+'''
+The following methods are used for getting the data from the database, but should not
+be used for data processing. Use the app context (from app import app) instead!
+==
+get_frequency_distribution()
+get_bucketed_frequency_distribution()
+get_role_stop_words()
+get_member_distribution()
+get_bucketed_member_distribution()
+'''
 def get_frequency_distribution():
     rcd_cursor = role_corpus.db[configurations.freq_dist_collection].find({});
     frequency_distribution = {}
@@ -52,7 +64,6 @@ def get_bucketed_frequency_distribution():
         "status": "OK",
         "frequency_distribution": frequency_distribution
     }
-
 
 def get_role_stop_words():
     data = get_bucketed_frequency_distribution()
@@ -152,18 +163,15 @@ def format_data(process_type, list_of_words, lang, freqdist, memberdist):
     return r_roles_found
 
 def process_text(doc=None):
-    rsw_result = get_role_stop_words()
-    fd_result = get_frequency_distribution()
-    md_result = get_member_distribution()
     tokenized_words = wordpunct_tokenize(doc)
     lang = 'english'
 
     # Stop Words
     stop_words = stopwords.words(lang)
-    role_stop_words = rsw_result['role_stop_words']
+    role_stop_words = app.role_stop_words
     all_stop_words = stop_words + role_stop_words
-    freqdist = fd_result['frequency_distribution']
-    memberdist = md_result['member_distribution']
+    freqdist = app.frequency_distribution
+    memberdist = app.member_distribution
 
     list_of_words = [i.lower() for i in tokenized_words if i.lower() not in all_stop_words]
 
