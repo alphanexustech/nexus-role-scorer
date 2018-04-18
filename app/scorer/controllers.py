@@ -110,10 +110,10 @@ word_count - the total number of words found in the document signaling the role
 role_length - the total possible number of roles
 '''
 def calculate_normalized_role_score(word_count, role_length):
-    return word_count/role_length * 100
+    return float(word_count)/role_length * 100
 
 def calculate_role_density_score(r_role_score, length_words_no_stop):
-    r_role_density_score = r_role_score/length_words_no_stop * 100
+    r_role_density_score = float(r_role_score)/length_words_no_stop * 100
     return r_role_density_score
 
 '''
