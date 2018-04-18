@@ -25,6 +25,8 @@ from bson import json_util
 # Date
 from datetime import datetime
 
+# Application context
+from app import app
 
 def default():
     return 'Hello Scorers!'
