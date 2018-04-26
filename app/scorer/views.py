@@ -39,6 +39,10 @@ def get_member_distribution():
 def get_bucketed_member_distribution():
     return jsonify(controllers.get_bucketed_member_distribution())
 
+@scorer.route('/memberlist/', methods=['GET'])
+def get_member_list():
+    return jsonify(controllers.get_member_list())
+
 @scorer.route('/<role_set>/', methods=['POST'])
 def analyze_text(role_set=None):
     r = request.get_json()

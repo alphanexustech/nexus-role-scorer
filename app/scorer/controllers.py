@@ -106,6 +106,20 @@ def get_bucketed_member_distribution():
     }
 
 '''
+Other useful methods for understanding the corpus
+'''
+def get_member_list():
+    rcd_cursor = role_corpus.db[configurations.membership_collection].find({});
+    member_list = []
+    for i in rcd_cursor:
+        member_list.append(i['role'])
+    return {
+        "status": "OK",
+        "member_list": list(set(member_list)),
+        "member_list_length": len(list(set(member_list)))
+    }
+
+'''
 word_count - the total number of words found in the document signaling the role
 role_length - the total possible number of roles
 '''
