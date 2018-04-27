@@ -2,12 +2,43 @@ from app import app
 from flask_pymongo import PyMongo
 from . import configurations
 
+# File processing
+import os
+import csv
+
 app.config['ROLECORPUS_DBNAME'] = 'role-corpus'
 role_corpus = PyMongo(app, config_prefix='ROLECORPUS')
 
 '''
 Iniitlaize the application context with hash tables from mongo
 '''
+def common_set_roles(flaskResponse=None):
+
+    #
+    # Manually pruned data from CSV
+    #
+
+    script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
+    rel_path = "..\\..\\data\\meta_alternative_name_list.csv"
+    abs_file_path = os.path.join(script_dir, rel_path)
+    roles = {};
+
+    with open(abs_file_path, encoding="utf8", newline='') as csvfile:
+        data = csv.reader(csvfile, delimiter=',', quotechar='"')
+        for row in data:
+            if row[2] == '1':
+                if row[1] != '':
+                    roles[row[0]] = row[1]
+                else:
+                    roles[row[0]] = row[0]
+
+    csvfile.close();
+
+    return roles
+
+# This dict is useful for getting just the commons set
+app.common_set_roles = common_set_roles()
+
 def get_frequency_distribution():
     with app.app_context():
         rcd_cursor = role_corpus.db[configurations.freq_dist_collection].find({});

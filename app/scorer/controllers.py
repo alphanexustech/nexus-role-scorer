@@ -25,6 +25,10 @@ from bson import json_util
 # Date
 from datetime import datetime
 
+# File processing
+import os
+import csv
+
 # Application context
 from app import app
 
@@ -32,7 +36,7 @@ def default():
     return 'Hello Scorers!'
 
 '''
-The following methods are used for getting the data from the database, but should not
+The following methods are used for getting the data from the database/csv file, but should not
 be used for data processing. Use the app context (from app import app) instead!
 ==
 get_frequency_distribution()
@@ -40,12 +44,19 @@ get_bucketed_frequency_distribution()
 get_role_stop_words()
 get_member_distribution()
 get_bucketed_member_distribution()
+common_set_roles()
 '''
 def get_frequency_distribution():
     rcd_cursor = role_corpus.db[configurations.freq_dist_collection].find({});
     frequency_distribution = {}
     for i in rcd_cursor:
-        frequency_distribution[i['word']] = i['roles']
+        roles = list(set(i['roles']))
+        common_roles = []
+        for r in roles:
+            if r in app.common_set_roles:
+                common_roles.append(app.common_set_roles[r])
+        if len(common_roles):
+            frequency_distribution[i['word']] = common_roles
     return {
         "status": "OK",
         "frequency_distribution": frequency_distribution
@@ -103,6 +114,34 @@ def get_bucketed_member_distribution():
     return {
         "status": "OK",
         "member_distribution": member_distribution
+    }
+
+def common_set_roles(flaskResponse=None):
+
+    #
+    # Manually pruned data from CSV
+    #
+
+    script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
+    rel_path = "..\\..\\data\\meta_alternative_name_list.csv"
+    abs_file_path = os.path.join(script_dir, rel_path)
+    roles = {};
+
+    with open(abs_file_path, encoding="utf8", newline='') as csvfile:
+        data = csv.reader(csvfile, delimiter=',', quotechar='"')
+        for row in data:
+            if row[2] == '1':
+                if row[1] != '':
+                    roles[row[0]] = row[1]
+                else:
+                    roles[row[0]] = row[0]
+
+    csvfile.close();
+
+    return {
+        "status": "OK",
+        "roles": roles,
+        "len_roles": len(roles)
     }
 
 '''
@@ -253,7 +292,7 @@ def process_text(doc=None):
     return sorted_final_result
 
 def analyze_text(role_set=None, doc=None):
-    if role_set == 'all_roles':
+    if role_set == 'all_roles': # Get the common_set
         if doc:
             result = process_text(doc)
             return {
