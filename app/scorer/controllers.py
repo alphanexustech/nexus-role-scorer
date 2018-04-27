@@ -55,7 +55,7 @@ def get_frequency_distribution():
         for r in roles:
             if r in app.common_set_roles:
                 common_roles.append(app.common_set_roles[r])
-        if len(common_roles):
+        if len(common_roles) > 0:
             frequency_distribution[i['word']] = common_roles
     return {
         "status": "OK",
@@ -66,11 +66,16 @@ def get_bucketed_frequency_distribution():
     rcd_cursor = role_corpus.db[configurations.freq_dist_collection].find({});
     frequency_distribution = {}
     for i in rcd_cursor:
-        if len(i['roles']) not in frequency_distribution:
-            frequency_distribution[len(i['roles'])] = [i['word']]
-        else:
-            frequency_distribution[len(i['roles'])].append(i['word'])
-
+        roles = list(set(i['roles']))
+        common_roles = []
+        for r in roles:
+            if r in app.common_set_roles:
+                common_roles.append(app.common_set_roles[r])
+        if len(common_roles) > 0:
+            if len(common_roles) not in frequency_distribution:
+                frequency_distribution[len(common_roles)] = [i['word']]
+            else:
+                frequency_distribution[len(common_roles)].append(i['word'])
     return {
         "status": "OK",
         "frequency_distribution": frequency_distribution
@@ -82,7 +87,7 @@ def get_role_stop_words():
     stopwords = []
     # Add words that show up in over half of the roles.
     for bucket in buckets:
-        if bucket > 444:
+        if bucket > 300:
             stopwords += buckets[bucket]
     # Add words that show up in just once.
     stopwords += buckets[1]
@@ -96,7 +101,8 @@ def get_member_distribution():
     rcd_cursor = role_corpus.db[configurations.membership_collection].find({});
     member_distribution = {}
     for i in rcd_cursor:
-        member_distribution[i['role']] = i['data']
+        if i['role'] in app.common_set_roles:
+            member_distribution[app.common_set_roles[i['role']]] = i['data']
     return {
         "status": "OK",
         "member_distribution": member_distribution
@@ -106,11 +112,11 @@ def get_bucketed_member_distribution():
     rcd_cursor = role_corpus.db[configurations.membership_collection].find({});
     member_distribution = {}
     for i in rcd_cursor:
-        if len(i['data']) not in member_distribution:
-            member_distribution[len(i['data'])] = [i['role']]
-        else:
-            member_distribution[len(i['data'])].append(i['role'])
-
+        if i['role'] in app.common_set_roles:
+            if len(i['data']) not in member_distribution:
+                member_distribution[len(i['data'])] = [app.common_set_roles[i['role']]]
+            else:
+                member_distribution[len(i['data'])].append(app.common_set_roles[i['role']])
     return {
         "status": "OK",
         "member_distribution": member_distribution
