@@ -128,12 +128,22 @@ def common_set_roles(flaskResponse=None):
     # Manually pruned data from CSV
     #
 
+    if sys.version_info[0] == 2:  # Not named on 2.6
+        kwargs = {}
+    else:
+        kwargs ={
+            'encoding': 'utf8',
+            'newline': ''
+            }
+
     script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
     rel_path = "..\\..\\data\\meta_alternative_name_list.csv"
+    if os.name == 'posix': # If on linux system
+        rel_path = "../../data/meta_alternative_name_list.csv"
     abs_file_path = os.path.join(script_dir, rel_path)
     roles = {};
 
-    with open(abs_file_path, encoding="utf8", newline='') as csvfile:
+    with open(abs_file_path, **kwargs) as csvfile:
         data = csv.reader(csvfile, delimiter=',', quotechar='"')
         for row in data:
             if row[2] == '1':
